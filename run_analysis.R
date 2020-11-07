@@ -1,19 +1,21 @@
-## This script assumes the test and train folders are already in the
-#directory.
-
+##Download file
+temp<-tempfile()
+download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip",
+              destfile = temp)
+unzip(temp)
 
 #Read the column names
-features <- read.table(file="features.txt", col.names=c("nber","label"))
+features <- read.table(file="UCI HAR Dataset/features.txt", col.names=c("nber","label"))
 
 #Read the subjects
-subject_test<-read.table(file="test/subject_test.txt", col.names="subject")
-subject_train<-read.table(file="train/subject_train.txt", col.names="subject")
+subject_test<-read.table(file="UCI HAR Dataset/test/subject_test.txt", col.names="subject")
+subject_train<-read.table(file="UCI HAR Dataset/train/subject_train.txt", col.names="subject")
 
 #Read the datasets
-x_train <- read.table(file="train/X_train.txt")
-y_train <- read.table(file="train/y_train.txt", col.names = "code")
-x_test <- read.table(file="test/X_test.txt")
-y_test <- read.table(file="test/y_test.txt", col.names="code")
+x_train <- read.table(file="UCI HAR Dataset/train/X_train.txt")
+y_train <- read.table(file="UCI HAR Dataset/train/y_train.txt", col.names = "code")
+x_test <- read.table(file="UCI HAR Dataset/test/X_test.txt")
+y_test <- read.table(file="UCI HAR Dataset/test/y_test.txt", col.names="code")
 
 
 ##Assign column names to x_train and x_test
@@ -41,7 +43,7 @@ all_data<-all_data[,mean_std]
 ## 3) Use descriptive activities name
 
 ## Reading file containing activities name
-activities_name <- read.table("activity_labels.txt", col.names=c("code","activity"))
+activities_name <- read.table("UCI HAR Dataset/activity_labels.txt", col.names=c("code","activity"))
 ## Merge data
 all_data <- merge(x=all_data, y=activities_name, by.x="code", by.y="code")
 ## Reorder the columns for simplicity. We also drop 'code' column.
@@ -72,7 +74,6 @@ colnames(all_data)<-all_data_colnames
 
 ## 5) Create new tidy data set with average per activity and subject
 
-all_data_2 <- all_data
 if (!"dplyr" %in% installed.packages()) {
   install.packages("dplyr")
 }
